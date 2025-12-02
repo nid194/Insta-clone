@@ -30,7 +30,7 @@ const StoryViewer = ({stories}) => {
             setActiveIndex(0)
         }
     }
-
+//Learning git
     useEffect(() =>{
        const interval = setInterval(() => {handleNextStory()},2000)
        return () =>{
