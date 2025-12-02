@@ -1,0 +1,9 @@
+export const ADD_NEW_REEL = "ADD_NEW_REEL";
+export const GET_ALL_REELS = "GET_ALL_REELS";
+export const GET_USER_REEL = "GET_USER_REEL";
+export const DELETE_REEL = "DELETE_REEL";
+export const GET_USERS_REELS = "GET_USERS_REELS";
+export const LIKED_REELS = "LIKED_REELS";
+export const UNLIKED_REELS = "UNLIKED_REELS";
+export const SAVED_REELS ="SAVED_REELS";
+export const UNSAVED_REELS ="UNSAVED_REELS";
