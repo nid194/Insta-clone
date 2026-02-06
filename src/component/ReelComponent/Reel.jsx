@@ -77,13 +77,13 @@ const Reel = ({onClose, isOpen}) => {
   return (
      <div>
             <Modal size={"4xl"} onClose={onClose} isOpen={isOpen} isCentered>
-                   <ModalOverlay />
-                   <ModalContent>
-                    <div className='flex justify-between py-1 px-10 items-center'>
-                       <p>create new post</p>
-                       <Button className='' variant="ghost" size="sm" colorschema={"blue"} onClick={handleaddedReel}>
-                         Share
-                       </Button>
+              <ModalOverlay />
+              <ModalContent>
+              <div className='flex justify-between py-1 px-10 items-center'>
+               <p>create new post</p>
+               <Button className='' variant="ghost" size="sm" colorschema={"blue"} onClick={handleaddedReel}>
+                  Share
+                </Button>
                     </div>
                     <hr/>
                     <ModalCloseButton/>

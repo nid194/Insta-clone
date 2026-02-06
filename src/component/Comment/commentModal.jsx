@@ -20,7 +20,7 @@ const CommentModal = ({ isOpen, onClose, isSaved, isPostLiked, handlePostLike, h
   const dispatch = useDispatch()
   const token = localStorage.getItem("authToken")
   const {addComment, findComments, likedComment} = useSelector((store) => store.comment)
-  const {user} = useSelector((store) => store)
+  const user = useSelector((store) => store.user)
   const comments = findComments?.[post?.postId] || [];
 
   useEffect(()=>{

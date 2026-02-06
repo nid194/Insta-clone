@@ -70,7 +70,6 @@ const SignIn = () => {
                    </FormControl>
                    )}
                 </Field>
-
                 <Button className='w-full' mt={4} colorScheme='purple' type='submit' isLoading={formikProps.isSubmitting}>
                    Sign In
                 </Button>

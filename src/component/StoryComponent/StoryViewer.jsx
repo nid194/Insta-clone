@@ -17,37 +17,53 @@ const StoryImage = styled.img`
 
 const StoryViewer = ({stories}) => {
 
+    // console.log("all story:",stories)
     const[currentStoryIndex, setCurrentStoryIndex] = useState(0)
     const[activeIndex,setActiveIndex] = useState(0)
+    const[viewedStories, setViewedStories] = useState([])
 
-    const handleNextStory = () =>{
-        if(currentStoryIndex < stories.length-1){
-            setCurrentStoryIndex(currentStoryIndex+1)
-            setActiveIndex(activeIndex+1)
-        }
-        else if(currentStoryIndex === stories.length-1){
-            setCurrentStoryIndex(0)
-            setActiveIndex(0)
-        }
-    }
-//Learning git
+  const orderedStories = [...stories].sort((a, b) => {
+  const aViewed = viewedStories.includes(a.storyId);
+  const bViewed = viewedStories.includes(b.storyId);
+
+  // Unviewed first
+  if (aViewed !== bViewed) return aViewed ? 1 : -1;
+
+  // Unviewed → latest first
+  if (!aViewed) {
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  }
+
+  // Viewed → oldest first
+  return new Date(a.createdAt) - new Date(b.createdAt);
+ });
+
+  useEffect(() => {
+  const currentStoryId = orderedStories?.[currentStoryIndex]?.storyId;
+  if (currentStoryId && !viewedStories.includes(currentStoryId)) {
+    setViewedStories((prev) => [...prev, currentStoryId]);
+  }
+ }, [currentStoryIndex, orderedStories, viewedStories]);
+
     useEffect(() =>{
-       const interval = setInterval(() => {handleNextStory()},2000)
+       const interval = setInterval(() => {setCurrentStoryIndex((prev) => prev < orderedStories.length - 1 ? prev + 1 : 0)
+        setActiveIndex((prev) => prev < orderedStories.length - 1 ? prev + 1 : 0)
+       },2500)
        return () =>{
         clearInterval(interval)
        }
-    },[currentStoryIndex,handleNextStory])
+    },[orderedStories.length])
 
   return (
     <div className='relative w-full'>
         <div>
             <StoryViewerContainer>
-                <StoryImage src={stories?.[currentStoryIndex]?.user?.userImage} alt="storyInside"/>
+                <StoryImage src={orderedStories?.[currentStoryIndex]?.img} alt="storyInside"/>
                 <div className='absolute top-0 flex w-full'>
                     {
-                        stories.map((item,index) =>  
-                            <ProgressBar duration={2000} index={index} activeIndex={activeIndex}/>
-                     )
+                      orderedStories.map((item,index) => ( 
+                      <ProgressBar key ={item.storyId} duration={2000} index={index} activeIndex={activeIndex}/>
+                     ))
                     }
                 </div>
             </StoryViewerContainer>

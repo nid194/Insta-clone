@@ -4,6 +4,7 @@ import { FaChevronDown } from "react-icons/fa";
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { findUserProfileAction, followUserAction,unFollowUserAction} from '../Redux/User/UserAction';
+import MessageView from '../Message/MessageView';
 
 
 const UserDetail = ({ user,mode = "full" }) => {
@@ -24,6 +25,8 @@ const UserDetail = ({ user,mode = "full" }) => {
        dispatch(followUserAction({ token, followUserId:user.userId }))
        dispatch(findUserProfileAction({token}))
    }
+
+    
 
    const handleUnfollow = () => {
     setIsFollowingLocal(false)
@@ -111,7 +114,9 @@ const UserDetail = ({ user,mode = "full" }) => {
                 </div>
               )}
                <div>
-                <button className='border-none px-20 py-2 rounded'>Message</button>
+                <button className='border-none px-20 py-2 rounded' onClick={() => <MessageView selectedUser={isFollowing} currentUser={loggedinUser}/>}>
+                  Message
+                </button>
               </div>
             </div>  
           )}

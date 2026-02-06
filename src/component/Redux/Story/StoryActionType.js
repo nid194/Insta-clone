@@ -1,2 +1,3 @@
 export const ADD_STORY = "ADD_STORY";
 export const FIND_ALL_STORY_OF_USER = "FIND_ALL_STORY_OF_USER";
+export const STORIES_OF_USERS = "STORIES_OF_USERS";

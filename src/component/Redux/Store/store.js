@@ -6,6 +6,7 @@ import { PostReducer } from "../Post/PostReducer";
 import { CommentReducer } from "../Comment/CommentReducer";
 import { StoryReducer } from "../Story/StoryReducer"
 import { ReelReducer } from "../Reel/ReelReducer";
+import { notificationReducer } from "../Notification/NotificationReducer";
 
 const rootReducer=combineReducers({
   auth:AuthReducer,
@@ -13,7 +14,8 @@ const rootReducer=combineReducers({
   post:PostReducer,
   comment:CommentReducer,
   story:StoryReducer,
-  reel: ReelReducer
+  reel: ReelReducer,
+  notification: notificationReducer
 })
 
 export const store=legacy_createStore(rootReducer,applyMiddleware(thunk));

@@ -1,4 +1,4 @@
-import { ADD_NEW_REEL, GET_ALL_REELS, GET_USER_REEL, GET_USERS_REELS, LIKED_REELS, SAVED_REELS, UNLIKED_REELS, UNSAVED_REELS } from "./ReelActionType";
+import { ADD_NEW_REEL, DELETE_REEL, GET_ALL_REELS, GET_USER_REEL, GET_USERS_REELS, LIKED_REELS, SAVED_REELS, UNLIKED_REELS, UNSAVED_REELS } from "./ReelActionType";
 
 export const createNewReelAction =(data) => async(dispatch)=>{
   try{
@@ -160,13 +160,31 @@ export const unsavedReelsAction =(data) => async(dispatch)=>{
                 Authorization:`Bearer ${authToken}`
             },
     })
-     const savedReel = await response.json();
+     const unsavedReel = await response.json();
     
-         console.log("user unsaved reels:", savedReel);
-         dispatch({ type:UNSAVED_REELS, payload: savedReel.userResponse });
+         console.log("user unsaved reels:", unsavedReel);
+         dispatch({ type:UNSAVED_REELS, payload: unsavedReel.userResponse });
  }catch(error){
        console.log("reel cannot be unsaved:", error.message);
          dispatch({ type:"UNSAVED_REEL_FALIURE", payload: error.message});
  }
 }
 
+export const deleteReelAction =(data) => async(dispatch)=>{
+  try{
+    const response = await fetch(`http://localhost:8080/api/reel/deleteReel?reelId=${encodeURIComponent(data.reelId)}`,{
+        method:"DELETE",
+        headers:{
+                "Content-Type":"application/json",
+                Authorization:"Bearer "+ data.token
+            },
+    })
+     const deleteReel = await response.json();
+    
+         console.log("reel deleted:", deleteReel);
+         dispatch({ type: DELETE_REEL, payload: deleteReel.reel});
+ }catch(error){
+         console.log("reel cannot be deleted:", error.message);
+         dispatch({ type:"DELETE_REEL_FALIURE", payload:error.message});
+ }
+}

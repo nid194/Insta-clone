@@ -1,4 +1,4 @@
-import { GET_USER_BY_USERNAME, FOLLOW_USER, GET_USERS_BY_USER_IDS, SEARCH_USER, UNFOLLOW_USER, UPDATE_USER, GET_USER_PROFILE,GET_SELECTED_USER_PROFILE } from "./UserActionType"
+import { GET_USER_BY_USERNAME, FOLLOW_USER, GET_USERS_BY_USER_IDS, SEARCH_USER, UNFOLLOW_USER, UPDATE_USER, GET_USER_PROFILE,GET_SELECTED_USER_PROFILE, GET_USER } from "./UserActionType"
 
 
 const initialValue = {
@@ -9,7 +9,8 @@ const initialValue = {
     unfollowUser:null,
     searchUser:[],
     updateUser:null,
-    selectedUserProfile:null
+    selectedUserProfile:null,
+    getUser:null,
 }
 
 export const UserReducer=(store=initialValue,{type,payload})=>{
@@ -37,6 +38,9 @@ export const UserReducer=(store=initialValue,{type,payload})=>{
     }
     else if(type === GET_SELECTED_USER_PROFILE){
         return{...store, selectedUserProfile:payload}
+    }
+    else if(type === GET_USER){
+        return{...store, getUser:payload}
     }
     return store;
 }

@@ -1,4 +1,5 @@
-import {FOLLOW_USER, GET_USER_BY_USERNAME, GET_USERS_BY_USER_IDS, SEARCH_USER, UNFOLLOW_USER, UPDATE_USER, GET_USER_PROFILE, GET_SELECTED_USER_PROFILE} from "./UserActionType";
+import { fetchNotificationsAction } from "../Notification/NotificationAction";
+import {FOLLOW_USER, GET_USER_BY_USERNAME, GET_USERS_BY_USER_IDS, SEARCH_USER, UNFOLLOW_USER, UPDATE_USER, GET_USER_PROFILE, GET_SELECTED_USER_PROFILE, GET_USER} from "./UserActionType";
 
 export const findUserByUsernameAction = (data) => async(dispatch)=>{
  try{
@@ -33,7 +34,7 @@ export const findUsersByUserIdsAction = (data) => async(dispatch)=>{
      const user = await response.json();
 
      console.log("find all user:", user);
-     dispatch({ type: GET_USERS_BY_USER_IDS, payload: user.response.singleuserResponse.userResponse});
+     dispatch({ type: GET_USERS_BY_USER_IDS, payload: user.singleuserResponse.usersResponse});
     }catch(error){
       console.error("user not found:", error);
       dispatch({ type: "SIGNUP_FAILURE", payload: error.message });
@@ -51,11 +52,12 @@ export const followUserAction = (data) => async(dispatch)=>{
                 Authorization:"Bearer "+ data.token
             },
      })
-   //   console.log("response:",response)
      const user = await response.json();
 
      console.log("following user:", user);
+
      dispatch({ type: FOLLOW_USER, payload: user.userResponse});
+      dispatch(fetchNotificationsAction(data.token));
     }catch(error){
       console.error("couldn't follow user:", error);
       dispatch({ type: "FOLLOW_USER_FAILURE", payload: error.message });
@@ -147,7 +149,7 @@ export const updateUserAction = (data) => async(dispatch)=>{
 
 export const getUserProfileByIdAction = ({ token, userId }) => async (dispatch) => {
   try {
-    const response = await fetch(`http://localhost:8080/findUserById?userId=${userId}`, {
+    const response = await fetch(`http://localhost:8080/findUserById?userId=${encodeURIComponent(userId)}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -168,3 +170,28 @@ export const getUserProfileByIdAction = ({ token, userId }) => async (dispatch) 
     dispatch({ type: "GET_USER_FAILURE", payload: error.message });
   }
 };
+
+export const getAnyUserByEmailAction = (data) => async (dispatch) => {
+  try {
+    const response = await fetch(`http://localhost:8080/getUserByEmail?email=${encodeURIComponent(data.email)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + data.token,
+      },
+    });
+
+    const user = await response.json();
+    console.log("Fetched chat user:", user);
+
+    // store the searched user profile
+    dispatch({
+      type: GET_USER,
+      payload: user.userResponse || null,
+    });
+  } catch (error) {
+    console.error("Error fetching user by ID:", error);
+    dispatch({ type: "GET_USER_FAILURE", payload: error.message });
+  }
+};
+

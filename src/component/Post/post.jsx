@@ -7,7 +7,7 @@ import { RiSendPlaneLine } from 'react-icons/ri';
 import CommentModal from '../Comment/commentModal';
 import { useDisclosure } from '@chakra-ui/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { likePostAction, savePostAction, unlikePostAction, unsavePostAction } from '../Redux/Post/PostAction';
+import { likePostAction, savePostAction, unlikePostAction, unsavePostAction,deletePostAction } from '../Redux/Post/PostAction';
 import { isPostLikedByUser, isSavedPost } from '../../config/Logic';
 import { useNavigate } from "react-router-dom";
 
@@ -64,6 +64,10 @@ const Post = ({post}) => {
        setIsPostLiked(isPostLikedByUser(post,findUserProfile.userId)) 
        setIsSaved(isSavedPost(findUserProfile,post.postId))
   },[post, findUserProfile]);
+
+  const handleDelete = () =>{
+    dispatch(deletePostAction({token,postId:post?.postId}))
+  }
   return (
     <div>
         <div className='border rounded-md w-full'>
@@ -79,7 +83,7 @@ const Post = ({post}) => {
                   <BsThreeDots className='dots' onClick={handleClick}/>
                   <div className='dropdown-content'>
                     { 
-                      showDropDown && <p className='bg-black text-white py-1 px-4 rounded md cursor-pointer'>Delete</p>
+                      showDropDown && <p className='bg-black text-white py-1 px-4 rounded md cursor-pointer' onClick={handleDelete}>Delete</p>
                     }
                   </div>
                 </div>

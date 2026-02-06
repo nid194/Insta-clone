@@ -1,4 +1,4 @@
-import { ADD_STORY, FIND_ALL_STORY_OF_USER } from "./StoryActionType";
+import { ADD_STORY, FIND_ALL_STORY_OF_USER, STORIES_OF_USERS } from "./StoryActionType";
 
 export const addStoryAction =(data) => async(dispatch)=>{
   try{
@@ -6,7 +6,7 @@ export const addStoryAction =(data) => async(dispatch)=>{
         method:"POST",
         headers:{
                 "Content-Type":"application/json",
-                Authorization:"Bearer" + data.token
+                Authorization:"Bearer " + data.token
             },
         body:JSON.stringify(data.story)
     })
@@ -27,13 +27,33 @@ export const findStoryAction =(data) => async(dispatch)=>{
         method:"POST",
         headers:{
                 "Content-Type":"application/json",
-                Authorization:"Bearer" + data.token
+                Authorization:"Bearer " + data.token
             },
     })
      const foundedStory = await response.json();
     
          console.log("found user story:", foundedStory);
          dispatch({ type: FIND_ALL_STORY_OF_USER, payload: foundedStory.stories});
+ }catch(error){
+       console.log("story cannot be found:", error.message);
+         dispatch({ type:"", payload: error.message});
+ }
+}
+
+export const findAllStoryOfUsersAction =(data) => async(dispatch)=>{
+  try{
+
+      const response = await fetch(`http://localhost:8080/api/stories/findStoriesOfUsers?userIds=${encodeURIComponent(data.userIds)}`,{
+        method:"GET",
+        headers:{
+                "Content-Type":"application/json",
+                Authorization:"Bearer " + data.token
+            },
+    })
+     const foundedStories = await response.json();
+    
+         console.log("found user story:", foundedStories);
+         dispatch({ type: STORIES_OF_USERS, payload: foundedStories.stories});
  }catch(error){
        console.log("story cannot be found:", error.message);
          dispatch({ type:"", payload: error.message});

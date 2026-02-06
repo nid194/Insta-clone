@@ -7,7 +7,7 @@ import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { FaRegComment } from 'react-icons/fa';
 import { RiSendPlaneLine } from 'react-icons/ri';
 import { isReelLikedByUser,isSavedReel } from '../../config/Logic';
-import { likedReelsAction,unlikedReelsAction,savedReelsAction,unsavedReelsAction } from '../Redux/Reel/ReelAction';
+import { likedReelsAction,unlikedReelsAction,savedReelsAction,unsavedReelsAction,deleteReelAction } from '../Redux/Reel/ReelAction';
 import ReelCommentModal from '../Comment/ReelCommentModal'
 
 const ReelInHome = ({reel}) => {
@@ -40,12 +40,13 @@ const ReelInHome = ({reel}) => {
   const handleSavedReel = () =>{
     setIsReelSaved(true)
     dispatch(savedReelsAction(data))
+     console.log(" ----------------saved---------------",data)
   }
 
   const handleUnsavedReel = () =>{
     setIsReelSaved(false)
     dispatch(unsavedReelsAction(data))
-    // console.log("------------------------",data)
+    console.log("----------unsaved --------------",data)
   }
 
   const handleOpenComment = () =>{
@@ -61,33 +62,37 @@ const ReelInHome = ({reel}) => {
        setIsReelLiked(isReelLikedByUser(reel,findUserProfile.userId)) 
        setIsReelSaved(isSavedReel(findUserProfile,reel.reelId))
   },[reel, findUserProfile]);
+
+  const handleReelDeletion = () =>{
+    dispatch(deleteReelAction({token,reelId:reel?.reelId}))
+  }
   return (
     <div>
         <div className='border rounded-md w-full'>
             <div className='flex justify-between items-center w-full py-4 px-5'>
                 <div className='flex items-center'>
-                   <img className='h-12 w-12 rounded-full' src={reel.user?.userImage ||'https://cdn.pixabay.com/photo/2023/09/22/07/02/red-8268266_1280.jpg'} alt=''/>
-                   <div className='ml-2'>
-                      <p className='font-semibold text-sm'>{reel?.user?.username}</p>
-                      <p className='font-thin text-sm text-left'>{reel?.location}</p>
-                    </div>  
-                  </div>
+                    <img className='h-12 w-12 rounded-full' src={reel.user?.userImage || 'https://cdn.pixabay.com/photo/2023/09/22/07/02/red-8268266_1280.jpg'} alt=''/>
+                    <div className='pl-2'>
+                      <p className='font-semibold text-sm'>{reel.user.username}</p>
+                      <p className='font-thin text-sm text-left'>{reel.location}</p>
+                    </div>
+                </div>
                 <div className='dropdown'>
                   <BsThreeDots className='dots' onClick={handleClick}/>
                   <div className='dropdown-content'>
                     { 
-                      showDropDown && <p className='bg-black text-white py-1 px-4 rounded md cursor-pointer'>Delete</p>
+                      showDropDown && <p className='bg-black text-white py-1 px-4 rounded md cursor-pointer' onClick={handleReelDeletion}>Delete</p>
                     }
                   </div>
                 </div>
             </div>
             <div className='w-full'>
-              <video src={reel?.videoUrl} controls className="w-full max-h-[550px] rounded-md"/>
+              <video src={reel?.videoUrl} controls />
             </div>
             <div className='flex justify-between items-center w-full px-5 py-4'>
               <div className='flex items-center space-x-2'>
                 {
-                    isReelLiked ? <AiFillHeart className='text-2xl hover:opacity-70 cursor-pointer text-red-500' onClick={handleReelUnlike}/> : <AiOutlineHeart className='text-xl hover:opacity-50 cursor-pointer' onClick={handleReelLike}/>
+                   isReelLiked ? <AiFillHeart className='text-2xl hover:opacity-70 cursor-pointer text-red-500' onClick={handleReelUnlike}/> : <AiOutlineHeart className='text-xl hover:opacity-50 cursor-pointer' onClick={handleReelLike}/>
                 }
                 <FaRegComment onClick={handleOpenComment} className='text-xl hover:opacity-50 cursor-pointer'/>
                 <RiSendPlaneLine className='text-xl hover:opacity-50 cursor-pointer'/>
@@ -97,8 +102,8 @@ const ReelInHome = ({reel}) => {
               </div>
             </div>
             <div className='w-full py-2 px-5 text-left'>
-              {reel?.userLikedReel?.length > 0 && <p>{reel?.userLikedReel?.length} likes</p>}
-              {reel?.comment?.length > 0 && <p className='opacity-50 py-2 cursor-pointer'>view all {reel?.comment?.length}</p>}
+              {reel?.userLikedReel?.length>0 && <p>{reel?.userLikedReel?.length} likes</p>}
+              {reel?.comments?.length>0 && <p className='opacity-50 py-2 cursor-pointer'>view all {reel?.comments?.length}</p>}
             </div>
             <div className='border border-t w-full'>
               <div className='flex w-full items-center px-5'>
@@ -107,9 +112,8 @@ const ReelInHome = ({reel}) => {
               </div>
             </div>
         </div>
-        <ReelCommentModal handleReelLike={handleReelLike} reel={reel} onClose={onClose} isOpen={isOpen} handleReelSaved={handleSavedReel} isReelLiked={isReelLiked} isReelSaved={isReelSaved}/>
+        <ReelCommentModal handleReelLike={handleReelLike} onClose={onClose} reel={reel} isOpen={isOpen} handleSavedReel={handleSavedReel} isReelLiked={isReelLiked} isReelSaved={isReelSaved}/>
     </div>
   )
 }
-
 export default ReelInHome

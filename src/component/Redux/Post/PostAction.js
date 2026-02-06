@@ -80,7 +80,7 @@ export const deletePostAction =(data) => async(dispatch)=>{
      const deletePost = await response.json();
     
          console.log("post deleted:", deletePost);
-         dispatch({ type: DELETE_POST, payload: deletePost.singlePostOfUser});
+         dispatch({ type: DELETE_POST, payload: deletePost.postResponse?.singlePostOfUser});
  }catch(error){
          console.log("post cannot be deleted:", error.message);
          dispatch({ type:"DELETE_POST_FALIURE", payload:error.message});
